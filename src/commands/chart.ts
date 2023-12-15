@@ -1,4 +1,4 @@
-import { CommandInteraction } from "discord.js";
+import { AttachmentBuilder, CommandInteraction } from "discord.js";
 import { SlashCommandBuilder, EmbedBuilder } from "@discordjs/builders";
 import { ssChart } from "../functions/ssChart";
 
@@ -50,23 +50,22 @@ export const data = new SlashCommandBuilder()
 
 
 export async function execute(interaction: CommandInteraction) {
-  
+
   const pair = interaction.options.get("pair");
   const interval = interaction.options.get("interval");
 
-  const url = await ssChart(pair?.value, interval?.value);
-
-  console.log(pair?.value, interval?.value);
-
+  await interaction.deferReply();
+  const url = await ssChart(pair?.value?.toString().toUpperCase(), interval?.value);
+  const chart = new AttachmentBuilder("./chart.png");
   const embed = new EmbedBuilder()
     .setTitle("Chart Information")
-    // .setImage(image)
+    .setImage("attachment://chart.png")
     .addFields(
-      { name: "Symbol", value: `${pair?.value}`, inline: true },
+      { name: "Symbol", value: `${pair?.value?.toString().toUpperCase()}`, inline: true },
       { name: "Interval", value: `${intervalMap[interval?.value as string]}`, inline: true }
     )
-    .setTimestamp();
-    // .setURL(url);
+    .setTimestamp()
+    .setURL(url);
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed], files: [chart] });
 }
