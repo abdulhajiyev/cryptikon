@@ -53,8 +53,8 @@ export async function execute(interaction: CommandInteraction) {
   
   const pair = interaction.options.get("pair");
   const interval = interaction.options.get("interval");
-  
-  await ssChart(pair?.value, interval?.value);
+
+  const url = await ssChart(pair?.value, interval?.value);
 
   console.log(pair?.value, interval?.value);
 

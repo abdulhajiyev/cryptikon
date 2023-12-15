@@ -29,5 +29,5 @@ export async function ssChart(symbol, interval) {
 
   await browser.close();
 
-  // return url;
+  return url;
 }
